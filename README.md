@@ -9,6 +9,6 @@ Projenin kapsamında insanlara istedikleri film hakkında fragman, yorum ve puan
 ![alt text](design/gorevler.png) 
 # Tasarim
 ![alt text](design/giris.png) ![alt text](design/kaydol.png) 
-![alt text](design/anasayfa.png) ![alt text](design/profıl.png) 
+![alt text](design/anasayfa.png) ![alt text](design/profil.png) 
 ![alt text](design/filmDetay.png) ![alt text](design/fragman.png) ![alt text](design/populer.png)
 
