@@ -12,7 +12,9 @@ class LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return ContainerGradient.bgGradient(
-      Scaffold(),
+      Scaffold(
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }

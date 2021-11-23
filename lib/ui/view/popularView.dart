@@ -12,7 +12,9 @@ class _PopularViewState extends State<PopularView> {
   @override
   Widget build(BuildContext context) {
     return ContainerGradient.bgGradient(
-      Scaffold(),
+      Scaffold(
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }

@@ -12,7 +12,9 @@ class _FragmentViewState extends State<FragmentView> {
   @override
   Widget build(BuildContext context) {
     return ContainerGradient.bgGradient(
-      Scaffold(),
+      Scaffold(
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }

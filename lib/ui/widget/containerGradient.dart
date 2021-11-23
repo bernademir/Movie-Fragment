@@ -8,7 +8,7 @@ class ContainerGradient extends StatelessWidget {
     return bgGradient(Scaffold());
   }
 
-  static bgGradient(Widget scaffold) {
+  static bgGradient(Scaffold scaffold) {
     Color gc1 = Color(0xff112d60);
     Color gc2 = Color(0xffb6c0c5);
     return Container(
@@ -19,6 +19,7 @@ class ContainerGradient extends StatelessWidget {
           colors: [gc1, gc2],
         ),
       ),
+      child: scaffold,
     );
   }
 }

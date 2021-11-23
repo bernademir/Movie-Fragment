@@ -12,7 +12,9 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return ContainerGradient.bgGradient(
-      Scaffold(),
+      Scaffold(
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }
