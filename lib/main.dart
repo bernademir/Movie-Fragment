@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_fragment/ui/view/homePageView.dart';
+import 'package:movie_fragment/ui/view/movieDetailView.dart';
+import 'package:movie_fragment/ui/view/loginView.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: HomePageView(),
+      home: LoginView(),
     );
   }
 }
