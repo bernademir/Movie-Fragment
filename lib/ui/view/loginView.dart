@@ -11,85 +11,107 @@ class LoginView extends StatefulWidget {
 class LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
+    Color mainColor = Color(0xff112d60);
+    Color hintColor = Color(0xffB6C0C5);
     return ContainerGradient.bgGradient(
       Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text("Login Page"),
-        backgroundColor: Colors.blue.shade900,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: Center(
-                child: Container(
-                    width: 200,
-                    height: 150,
+        backgroundColor: Colors.transparent,
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 60.0),
+                child: Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 3,
                     child: Center(
                       child: Text(
                         "Uygulama Adı",
-                        style: TextStyle(color: Colors.white, fontSize: 30),
-                      )
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(color: Colors.white),
+                      ),
                     ),
                   ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Email'
-                  ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Şifre',
-                    hintText: 'Şifre'
-                  )
-              ),
-            ),
-            TextButton(
-              onPressed: () => {},
-              child: Text(
-                'Şifremi Unuttum',
-                style: TextStyle(color: Colors.blue.shade900, fontSize: 15),
-              ),
-            ),
-            TextButton(
-              onPressed: () => {},
-              child: Text(
-                'Hesabınız Yok Mu? Kaydol',
-                style: TextStyle(color: Colors.blue.shade900, fontSize: 15)
-              )
-            ),
-            Container(
-              height: 50,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: Colors.blue.shade900, borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                onPressed: () => {},
-                child: Text(
-                  'Login',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
               ),
-            ),
-            
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    labelText: 'Email',
+                    hintText: 'Email',
+                    hintStyle: TextStyle(color: hintColor),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15.0, right: 15.0, top: 15, bottom: 0),
+                child: TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    labelText: 'Şifre',
+                    hintText: 'Şifre',
+                    hintStyle: TextStyle(color: hintColor),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(15),
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: mainColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextButton(
+                  onPressed: () => {},
+                  child: Text(
+                    'Giriş'.toUpperCase(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6!
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => {},
+                child: Text(
+                  'Şifremi Unuttum',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: mainColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () => {},
+                child: Text(
+                  'Hesabınız Yok Mu? Kaydol',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: mainColor),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    )
     );
   }
 }
