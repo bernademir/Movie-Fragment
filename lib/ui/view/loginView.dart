@@ -9,6 +9,8 @@ class LoginView extends StatefulWidget {
 }
 
 class LoginViewState extends State<LoginView> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController sifreController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Color mainColor = Color(0xff112d60);
@@ -40,6 +42,7 @@ class LoginViewState extends State<LoginView> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -56,6 +59,7 @@ class LoginViewState extends State<LoginView> {
                 padding: const EdgeInsets.only(
                     left: 15.0, right: 15.0, top: 15, bottom: 0),
                 child: TextField(
+                  controller: sifreController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
