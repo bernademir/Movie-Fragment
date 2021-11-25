@@ -7,6 +7,9 @@ Projenin kapsamında insanlara istedikleri film hakkında fragman, yorum ve puan
 <br>
 # Gorev Dagilimi
 ![alt text](design/gorevler.png) 
+# Proje Yönetimi
+![Jira Board](design/jira-board.png)
+![Jira Roadmap](design/jira-roadmap.png)
 # Tasarim
 ![alt text](design/giris.png) ![alt text](design/kaydol.png) 
 ![alt text](design/anasayfa.png) ![alt text](design/profil.png) 
