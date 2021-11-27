@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
+import 'package:movie_fragment/ui/widget/floatAppBar.dart';
 
 class PopularView extends StatefulWidget {
   const PopularView({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class _PopularViewState extends State<PopularView> {
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: FloatAppBar(),
       ),
     );
   }
