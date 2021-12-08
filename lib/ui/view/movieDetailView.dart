@@ -50,6 +50,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                   else
                     _star(context, false, 30.0 + (i * 45))
               ]),
+              _pointArea(context, _width),
               Container(
                   margin: EdgeInsets.only(top: 10.0),
                   child: _divider(context, 15.0)),
@@ -85,6 +86,56 @@ class _MovieDetailViewState extends State<MovieDetailView> {
           height: 30,
         ),
       );
+  }
+
+  _pointArea(BuildContext context, _width) {
+    return Row(children: [
+      Column(children: [ // Popülerlik puanı
+        Container(height: 20, width: _width/3, margin: const EdgeInsets.only(top: 20.0),
+          child: Text("120.45", textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
+          )
+        ),
+        Container(height: 30, width: _width/3, 
+          child: Text("Popülerlik", textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          )
+        )
+      ]),
+      Column(children: [ // Yıldız Puanı
+        Container(height: 24, width: _width/3, margin: const EdgeInsets.only(top: 18.0),
+          child: _star(context, true, _width/6)
+        ),
+        Container(height: 20, width: _width/6, margin: const EdgeInsets.only(left: 2.0), color: Colors.green,
+          child: Row(children: [
+            Text("8.3", textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Text(" / 10", textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            )
+          ],)
+        )
+      ]),
+      Column(children: [ // Popülerlik puanı
+        Container(height: 20, width: _width/3, margin: const EdgeInsets.only(top: 20.0),
+          child: Text("91", textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              color: Colors.blue[900], fontSize: 18, fontWeight: FontWeight.bold),
+          )
+        ),
+        Container(height: 30, width: _width/3, 
+          child: Text("Sayılan Oy", textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          )
+        )
+      ]), 
+    ]);
   }
 
   _divider(BuildContext context, var height) {
