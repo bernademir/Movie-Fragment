@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
 
-
 class MovieDetailView extends StatefulWidget {
   const MovieDetailView({Key? key}) : super(key: key);
 
@@ -23,6 +22,14 @@ class _MovieDetailViewState extends State<MovieDetailView> {
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -221,7 +228,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
     );
   }
 
-  _videoPlayer(BuildContext context) {
-    return Container();
-  }
+  // _videoPlayer(BuildContext context) {
+  //   return Container();
+  // }
 }

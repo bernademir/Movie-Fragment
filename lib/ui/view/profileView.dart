@@ -1,7 +1,10 @@
-import 'dart:ui';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
+
+import '../../core/model/userModel.dart';
+import '../widget/ContainerGradient.dart';
+import 'loginView.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -11,9 +14,26 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user?.uid)
+        .get()
+        .then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Color containerColor = Color(0xff112d60);
+    Color color1 = Color(0xff112d60);
+    Color color2 = Color(0xffB6C0C5);
     final double itemHeight = MediaQuery.of(context).size.height / 4;
     final double itemWidth = MediaQuery.of(context).size.width / 3;
 
@@ -50,22 +70,33 @@ class _ProfileViewState extends State<ProfileView> {
         "8.0"
       ],
     ];
+
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: color1,
+          child: Icon(
+            Icons.logout_rounded,
+            color: color2,
+          ),
+          onPressed: () {
+            logOut(context);
+          },
+        ),
         body: Column(
           children: [
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Container(
                 margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 100.0),
                 decoration: BoxDecoration(
-                  color: containerColor.withOpacity(0.7),
+                  color: color1.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Center(
                   child: Text(
-                    "Kullanıcı Adı: \nEmail: ",
+                    "Kullanıcı Adı: ${loggedInUser.userName}\nEmail: ${loggedInUser.email}",
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1!
@@ -77,9 +108,9 @@ class _ProfileViewState extends State<ProfileView> {
             Expanded(
               flex: 1,
               child: Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 50.0),
+                margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
                 decoration: BoxDecoration(
-                  color: containerColor.withOpacity(0.7),
+                  color: color1.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Center(
@@ -94,7 +125,7 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
             Expanded(
-              flex: 4,
+              flex: 5,
               child: Container(
                 margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
                 child: GridView.count(
@@ -174,5 +205,11 @@ class _ProfileViewState extends State<ProfileView> {
         ),
       ),
     );
+  }
+
+  Future<void> logOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => LoginView()));
   }
 }

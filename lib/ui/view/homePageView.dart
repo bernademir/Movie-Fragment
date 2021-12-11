@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
-import 'package:movie_fragment/ui/widget/floatAppBar.dart';
+
+import '../widget/ContainerGradient.dart';
+import '../widget/floatAppBar.dart';
+import 'profileView.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({Key? key}) : super(key: key);
@@ -10,6 +12,7 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
+
   List homePageTitles = ["En Yeniler", "Popülerler", "İncele"];
   //populer kismi icin apiden gelecekler
   List movieNames = [
@@ -32,12 +35,23 @@ class _HomePageViewState extends State<HomePageView> {
   List rates = ["7.3", "5.5", "9.5", "8.5", "8.5", "8.5"];
   @override
   Widget build(BuildContext context) {
-    Color containerColor = Color(0xff112d60);
-    Color categoryNameColor = Color(0xffB6C0C5);
+    Color color1 = Color(0xff112d60);
+    Color color2 = Color(0xffB6C0C5);
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
         appBar: FloatAppBar(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: color1,
+          child: Icon(
+            Icons.account_circle,
+            color: color2,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => ProfileView()));
+          },
+        ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -59,7 +73,7 @@ class _HomePageViewState extends State<HomePageView> {
                           height: MediaQuery.of(context).size.height / 3.5,
                           width: MediaQuery.of(context).size.width / 3,
                           decoration: BoxDecoration(
-                            color: containerColor.withOpacity(0.7),
+                            color: color1.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Column(
@@ -112,7 +126,7 @@ class _HomePageViewState extends State<HomePageView> {
                         height: MediaQuery.of(context).size.height / 3.5,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
-                          color: containerColor.withOpacity(0.7),
+                          color: color1.withOpacity(0.7),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Row(
@@ -136,7 +150,7 @@ class _HomePageViewState extends State<HomePageView> {
                                 children: [
                                   _movieNameText(i, context),
                                   _yearText(i, context),
-                                  _categoryText(i, context, categoryNameColor),
+                                  _categoryText(i, context, color2),
                                   Row(
                                     children: [
                                       Icon(
@@ -170,17 +184,14 @@ class _HomePageViewState extends State<HomePageView> {
     );
   }
 
-  _categoryText(int i, BuildContext context, Color categoryNameColor) {
+  _categoryText(int i, BuildContext context, Color color2) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
         child: Text(
           category[i],
-          style: Theme.of(context)
-              .textTheme
-              .subtitle1!
-              .copyWith(color: categoryNameColor),
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(color: color2),
         ),
       ),
     );

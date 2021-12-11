@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "415008385497",
+    "project_id": "moviefragment-7ed99",
+    "storage_bucket": "moviefragment-7ed99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415008385497:android:f3cfee2e47f646fa3611c8",
+        "android_client_info": {
+          "package_name": "com.example.movie_fragment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "415008385497-78qobo540nfig08680023h1veo3341l3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBowdgeNOR4QnJJMS9fVS0qjhLOxhzllqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "415008385497-78qobo540nfig08680023h1veo3341l3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
