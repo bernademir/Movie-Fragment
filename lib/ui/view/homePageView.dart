@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 import '../widget/ContainerGradient.dart';
 import '../widget/floatAppBar.dart';
@@ -14,16 +15,6 @@ class HomePageView extends StatefulWidget {
 class _HomePageViewState extends State<HomePageView> {
 
   List homePageTitles = ["En Yeniler", "Popülerler", "İncele"];
-  //populer kismi icin apiden gelecekler
-  List movieNames = [
-    "movie1",
-    "movie2",
-    "movie3",
-    "movie4",
-    "movie5",
-    "movie6"
-  ];
-  List year = ["2020", "2020", "2020", "2020", "2020", "2020"];
   List category = [
     "category",
     "category",
@@ -32,7 +23,29 @@ class _HomePageViewState extends State<HomePageView> {
     "category",
     "category"
   ];
-  List rates = ["7.3", "5.5", "9.5", "8.5", "8.5", "8.5"];
+  List popularmovies = [];
+  List mostrecentmovies = [];
+  final String apikey = "6a5f967b177a332b029fa552bd1f516a";
+  final readaccesstoken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2YTVmOTY3YjE3N2EzMzJiMDI5ZmE1NTJiZDFmNTE2YSIsInN1YiI6IjYxYmYwYmE5MDE0MzI1MDA0MzM0MDFiZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-zRpMBo7cOxhJw3IllQr2xam83xvp2GWi5DFYv_i_hI";
+
+
+  @override
+  void initState(){
+    loadmovies();
+    super.initState();
+  }
+
+  loadmovies() async {
+    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(apikey, readaccesstoken));
+    // api'dan gelen popüler ve en yeniler bu listelerde
+    Map popularresult = await tmdbWithCustomLogs.v3.movies.getPouplar();
+    Map mostrecentresult = await tmdbWithCustomLogs.v3.movies.getNowPlaying();
+    setState(() {
+      popularmovies = popularresult['results'];
+      mostrecentmovies = mostrecentresult['results'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Color color1 = Color(0xff112d60);
@@ -178,7 +191,7 @@ class _HomePageViewState extends State<HomePageView> {
 
   _ratesText(int i, BuildContext context) {
     return Text(
-      rates[i] + "/10",
+      popularmovies[i]['vote_average'].toString() + "/10",
       style:
           Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white),
     );
@@ -203,7 +216,7 @@ class _HomePageViewState extends State<HomePageView> {
       child: Container(
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
         child: Text(
-          year[i],
+          popularmovies[i]['release_date'],
           style: Theme.of(context)
               .textTheme
               .subtitle1!
@@ -220,7 +233,7 @@ class _HomePageViewState extends State<HomePageView> {
         margin:
             EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0, bottom: 0.0),
         child: Text(
-          movieNames[i],
+          popularmovies[i]['original_title'],
           style: Theme.of(context)
               .textTheme
               .headline6!
