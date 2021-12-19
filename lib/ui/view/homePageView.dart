@@ -13,36 +13,28 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-
   List homePageTitles = ["En Yeniler", "Popülerler", "İncele"];
-  List category = [
-    "category",
-    "category",
-    "category",
-    "category",
-    "category",
-    "category"
-  ];
-  List popularmovies = [];
-  List mostrecentmovies = [];
-  final String apikey = "6a5f967b177a332b029fa552bd1f516a";
-  final readaccesstoken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2YTVmOTY3YjE3N2EzMzJiMDI5ZmE1NTJiZDFmNTE2YSIsInN1YiI6IjYxYmYwYmE5MDE0MzI1MDA0MzM0MDFiZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-zRpMBo7cOxhJw3IllQr2xam83xvp2GWi5DFYv_i_hI";
 
+  List popularMovies = [];
+  List mostRecentMovies = [];
+  final String apiKey = "6a5f967b177a332b029fa552bd1f516a";
+  final readAccesstoken =
+      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2YTVmOTY3YjE3N2EzMzJiMDI5ZmE1NTJiZDFmNTE2YSIsInN1YiI6IjYxYmYwYmE5MDE0MzI1MDA0MzM0MDFiZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-zRpMBo7cOxhJw3IllQr2xam83xvp2GWi5DFYv_i_hI";
 
   @override
-  void initState(){
+  void initState() {
     loadmovies();
     super.initState();
   }
 
   loadmovies() async {
-    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(apikey, readaccesstoken));
+    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(apiKey, readAccesstoken));
     // api'dan gelen popüler ve en yeniler bu listelerde
     Map popularresult = await tmdbWithCustomLogs.v3.movies.getPouplar();
     Map mostrecentresult = await tmdbWithCustomLogs.v3.movies.getNowPlaying();
     setState(() {
-      popularmovies = popularresult['results'];
-      mostrecentmovies = mostrecentresult['results'];
+      popularMovies = popularresult['results'];
+      mostRecentMovies = mostrecentresult['results'];
     });
   }
 
@@ -75,9 +67,7 @@ class _HomePageViewState extends State<HomePageView> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (var i = 0;
-                        i < 6;
-                        i++) //apiden donen fotolar ve textler listeye atilip list.size kadar donecek
+                    for (var i = 0; i < mostRecentMovies.length; i++)
                       InkWell(
                         onTap: () {},
                         child: Container(
@@ -92,7 +82,7 @@ class _HomePageViewState extends State<HomePageView> {
                           child: Column(
                             children: [
                               Expanded(
-                                flex: 5,
+                                flex: 8,
                                 child: Card(
                                   elevation: 10.0,
                                   margin: EdgeInsets.all(0.0),
@@ -100,16 +90,19 @@ class _HomePageViewState extends State<HomePageView> {
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
                                   child: Image.network(
-                                    "https://cdn1.ntv.com.tr/gorsel/e8opKTVsvECYVY5-4m0s-g.jpg?width=700&height=875&mode=crop&scale=both&v=20190630072843775",
+                                    'https://image.tmdb.org/t/p/original/' +
+                                        mostRecentMovies[i]['poster_path']
+                                            .toString(),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
                               Expanded(
-                                flex: 1,
+                                flex: 2,
                                 child: Center(
                                   child: Text(
-                                    "film adi", //apiden donen text listden alinacak
+                                    mostRecentMovies[i][
+                                        'original_title'], //apiden donen text listden alinacak
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText1!
@@ -128,9 +121,7 @@ class _HomePageViewState extends State<HomePageView> {
               _headlineRow(context),
               Column(
                 children: [
-                  for (var i = 0;
-                      i < 6;
-                      i++) //apiden donen fotolar ve textler listeye atilip list.size kadar donecek
+                  for (var i = 0; i < popularMovies.length; i++)
                     InkWell(
                       onTap: () {},
                       child: Container(
@@ -152,7 +143,9 @@ class _HomePageViewState extends State<HomePageView> {
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 child: Image.network(
-                                  "https://cdn1.ntv.com.tr/gorsel/e8opKTVsvECYVY5-4m0s-g.jpg?width=700&height=875&mode=crop&scale=both&v=20190630072843775",
+                                  'https://image.tmdb.org/t/p/original' +
+                                      mostRecentMovies[i]['poster_path']
+                                          .toString(),
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -191,7 +184,7 @@ class _HomePageViewState extends State<HomePageView> {
 
   _ratesText(int i, BuildContext context) {
     return Text(
-      popularmovies[i]['vote_average'].toString() + "/10",
+      popularMovies[i]['vote_average'].toString() + "/10",
       style:
           Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white),
     );
@@ -203,7 +196,7 @@ class _HomePageViewState extends State<HomePageView> {
       child: Container(
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
         child: Text(
-          category[i],
+          popularMovies[i]['popularity'].toString(),
           style: Theme.of(context).textTheme.subtitle1!.copyWith(color: color2),
         ),
       ),
@@ -216,7 +209,7 @@ class _HomePageViewState extends State<HomePageView> {
       child: Container(
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
         child: Text(
-          popularmovies[i]['release_date'],
+          popularMovies[i]['release_date'],
           style: Theme.of(context)
               .textTheme
               .subtitle1!
@@ -233,7 +226,7 @@ class _HomePageViewState extends State<HomePageView> {
         margin:
             EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0, bottom: 0.0),
         child: Text(
-          popularmovies[i]['original_title'],
+          popularMovies[i]['original_title'],
           style: Theme.of(context)
               .textTheme
               .headline6!
