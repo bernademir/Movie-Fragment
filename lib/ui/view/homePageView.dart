@@ -1,6 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_fragment/ui/view/popularView.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
+import '../../core/service/movieService.dart';
 import '../widget/ContainerGradient.dart';
 import '../widget/floatAppBar.dart';
 import 'profileView.dart';
@@ -17,24 +20,23 @@ class _HomePageViewState extends State<HomePageView> {
 
   List popularMovies = [];
   List mostRecentMovies = [];
-  final String apiKey = "6a5f967b177a332b029fa552bd1f516a";
-  final readAccesstoken =
-      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2YTVmOTY3YjE3N2EzMzJiMDI5ZmE1NTJiZDFmNTE2YSIsInN1YiI6IjYxYmYwYmE5MDE0MzI1MDA0MzM0MDFiZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-zRpMBo7cOxhJw3IllQr2xam83xvp2GWi5DFYv_i_hI";
+
+  MovieService _service = MovieService();
 
   @override
   void initState() {
-    loadmovies();
+    loadMovies();
     super.initState();
   }
 
-  loadmovies() async {
-    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(apiKey, readAccesstoken));
+  loadMovies() async {
+    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(_service.apiKey, _service.readAccesstoken));
     // api'dan gelen popüler ve en yeniler bu listelerde
-    Map popularresult = await tmdbWithCustomLogs.v3.movies.getPouplar();
-    Map mostrecentresult = await tmdbWithCustomLogs.v3.movies.getNowPlaying();
+    Map popularResult = await tmdbWithCustomLogs.v3.movies.getPouplar();
+    Map mostrecentResult = await tmdbWithCustomLogs.v3.movies.getNowPlaying();
     setState(() {
-      popularMovies = popularresult['results'];
-      mostRecentMovies = mostrecentresult['results'];
+      popularMovies = popularResult['results'];
+      mostRecentMovies = mostrecentResult['results'];
     });
   }
 
@@ -144,7 +146,7 @@ class _HomePageViewState extends State<HomePageView> {
                                 ),
                                 child: Image.network(
                                   'https://image.tmdb.org/t/p/original' +
-                                      mostRecentMovies[i]['poster_path']
+                                      popularMovies[i]['poster_path']
                                           .toString(),
                                   fit: BoxFit.fill,
                                 ),
@@ -156,7 +158,7 @@ class _HomePageViewState extends State<HomePageView> {
                                 children: [
                                   _movieNameText(i, context),
                                   _yearText(i, context),
-                                  _categoryText(i, context, color2),
+                                  _popularityText(i, context, color2),
                                   Row(
                                     children: [
                                       Icon(
@@ -190,7 +192,7 @@ class _HomePageViewState extends State<HomePageView> {
     );
   }
 
-  _categoryText(int i, BuildContext context, Color color2) {
+  _popularityText(int i, BuildContext context, Color color2) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -245,10 +247,25 @@ class _HomePageViewState extends State<HomePageView> {
         ),
         Expanded(
           flex: 1,
-          child: Text(
-            homePageTitles[2].toUpperCase(),
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: homePageTitles[2].toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      decoration: TextDecoration.underline),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PopularView(),
+                        ),
+                      );
+                    },
+                )
+              ],
             ),
           ),
         ),

@@ -9,37 +9,44 @@ class PopularView extends StatefulWidget {
   _PopularViewState createState() => _PopularViewState();
 }
 
+Color color1 = Color(0xff112d60);
+Color color2 = Color(0xffB6C0C5);
+
 class _PopularViewState extends State<PopularView> {
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width;
     var _inset = 50.0;
+
     return ContainerGradient.bgGradient(
       Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: FloatAppBar(),
-          body: SingleChildScrollView(
-            child: Container(
-                width: _width,
-                margin: const EdgeInsets.all(20),
-                child: Column(children: <Widget>[
-                  Stack(
-                    children: [
-                      Text("Popüler",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1!
-                              .copyWith(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold)),
-                      for (int i = 0; i < 5; i++)
-                        _movieListItem(
-                            context, _width, _inset + i * 50.0 + i * 120.0)
-                    ],
-                  )
-                ])),
-          )),
+        backgroundColor: Colors.transparent,
+        appBar: FloatAppBar(),
+        body: SingleChildScrollView(
+          child: Container(
+            width: _width,
+            margin: const EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Stack(
+                  children: [
+                    Text(
+                      "Popüler",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5!
+                          .copyWith(color: Colors.white),
+                    ),
+                    for (int i = 0; i < 5; i++)
+                      _movieListItem(
+                          context, _width, _inset + i * 50.0 + i * 120.0)
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -50,69 +57,82 @@ _movieListItem(BuildContext context, _width, _inset) {
     height: 120,
     color: Colors.transparent,
     child: new Container(
-        decoration: new BoxDecoration(
-            color: Colors.blue[900],
-            borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
-                bottomLeft: const Radius.circular(12.0),
-                bottomRight: const Radius.circular(12.0))),
-        child: _infoArea(context)),
+      decoration: new BoxDecoration(
+        color: color1.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: _infoArea(context),
+    ),
   );
 }
 
 _movieImage(BuildContext context) {
   return Container(
-      margin: EdgeInsets.only(left: 25),
-      width: 97,
-      decoration: BoxDecoration(
-          borderRadius: new BorderRadius.only(
-              topLeft: const Radius.circular(8.0),
-              topRight: const Radius.circular(8.0),
-              bottomLeft: const Radius.circular(8.0),
-              bottomRight: const Radius.circular(8.0)),
-          image: new DecorationImage(
-              image: new NetworkImage(
-                  "https://cdn1.ntv.com.tr/gorsel/e8opKTVsvECYVY5-4m0s-g.jpg?width=700&height=875&mode=crop&scale=both&v=20190630072843775"),
-              fit: BoxFit.fitWidth)));
+    margin: EdgeInsets.only(left: 25),
+    width: 97,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      image: new DecorationImage(
+          image: new NetworkImage(
+              "https://cdn1.ntv.com.tr/gorsel/e8opKTVsvECYVY5-4m0s-g.jpg?width=700&height=875&mode=crop&scale=both&v=20190630072843775"),
+          fit: BoxFit.fitWidth),
+    ),
+  );
 }
 
 _infoArea(BuildContext context) {
-  return Row(children: [
-    _movieImage(context),
-    Stack(children: <Widget>[
-      _movieName(context),
-      _starRating(context),
-      _yonetmen(context)
-    ])
-  ]);
+  return Row(
+    children: [
+      _movieImage(context),
+      Stack(
+        children: <Widget>[
+          _movieName(context),
+          _starRating(context),
+          _yonetmen(context)
+        ],
+      ),
+    ],
+  );
 }
 
 _movieName(BuildContext context) {
   return Container(
-      margin: EdgeInsets.only(left: 10, top: 15),
-      child: Text("Movie Name",
-          style: Theme.of(context).textTheme.subtitle1!.copyWith(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)));
+    margin: EdgeInsets.only(left: 10, top: 15),
+    child: Text(
+      "Movie Name",
+      style:
+          Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),
+    ),
+  );
 }
 
 _yonetmen(BuildContext context) {
   return Container(
-      margin: EdgeInsets.only(left: 10, top: 38),
-      child: Text("Yönetmen: Alexandre Aja",
-          style: Theme.of(context).textTheme.subtitle1!.copyWith(
-              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)));
+    margin: EdgeInsets.only(left: 10, top: 38),
+    child: Text(
+      "Yönetmen: Alexandre Aja",
+      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+          color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+    ),
+  );
 }
 
 _starRating(BuildContext context) {
   return Container(
-      margin: EdgeInsets.only(left: 10, top: 55),
-      child: Column(children: [
+    margin: EdgeInsets.only(left: 10, top: 55),
+    child: Column(
+      children: [
         _star(context),
-        Text("8.3",
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold))
-      ]));
+        Text(
+          "",
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1!
+              .copyWith(color: Colors.white),
+        )
+      ],
+    ),
+  );
 }
 
 _star(BuildContext context) {
