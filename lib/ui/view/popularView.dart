@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:movie_fragment/ui/view/movieDetailView.dart';
 
+import 'package:movie_fragment/ui/view/movieDetailView.dart';
 import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
 import 'package:movie_fragment/ui/widget/floatAppBar.dart';
 
 class PopularView extends StatefulWidget {
   List popularMovies;
+  List mostRecentMovies;
   PopularView({
     Key? key,
     required this.popularMovies,
+    required this.mostRecentMovies,
   }) : super(key: key);
 
   @override
-  _PopularViewState createState() => _PopularViewState(popularMovies);
+  _PopularViewState createState() =>
+      _PopularViewState(popularMovies, mostRecentMovies);
 }
 
 Color color1 = Color(0xff112d60);
@@ -20,7 +23,8 @@ Color color2 = Color(0xffB6C0C5);
 
 class _PopularViewState extends State<PopularView> {
   List popularMovies;
-  _PopularViewState(this.popularMovies);
+  List mostRecentMovies;
+  _PopularViewState(this.popularMovies, this.mostRecentMovies);
   @override
   Widget build(BuildContext context) {
     return ContainerGradient.bgGradient(
@@ -47,14 +51,17 @@ class _PopularViewState extends State<PopularView> {
               ),
               for (int i = 0; i < widget.popularMovies.length; i++)
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                             MovieDetailView(),
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MovieDetailView(
+                          popularMovies: widget.popularMovies,
+                          mostRecentMovies: widget.mostRecentMovies,
+                          index: i,
                         ),
-                      );
+                      ),
+                    );
                   },
                   child: Container(
                     margin: EdgeInsets.all(8.0),
@@ -114,7 +121,8 @@ class _PopularViewState extends State<PopularView> {
                                           color: Colors.yellow,
                                         ),
                                         Text(
-                                          widget.popularMovies[i]['vote_average']
+                                          widget.popularMovies[i]
+                                                      ['vote_average']
                                                   .toString() +
                                               "/10",
                                           style: Theme.of(context)

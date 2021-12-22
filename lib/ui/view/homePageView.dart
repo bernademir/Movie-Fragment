@@ -73,14 +73,17 @@ class _HomePageViewState extends State<HomePageView> {
                   children: [
                     for (var i = 0; i < mostRecentMovies.length; i++)
                       InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MovieDetailView(),
-                            ),
-                          );
-                        },
+                        // onTap: () {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => MovieDetailView(
+                        //           popularMovies: popularMovies,
+                        //           mostRecentMovies: mostRecentMovies,
+                        //           index: i),
+                        //     ),
+                        //   );
+                        // },
                         child: Container(
                           margin:
                               EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0),
@@ -142,7 +145,11 @@ class _HomePageViewState extends State<HomePageView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MovieDetailView(),
+                            builder: (context) => MovieDetailView(
+                              popularMovies: popularMovies,
+                              mostRecentMovies: mostRecentMovies,
+                              index: i,
+                            ),
                           ),
                         );
                       },
@@ -284,8 +291,9 @@ class _HomePageViewState extends State<HomePageView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              PopularView(popularMovies: popularMovies),
+                          builder: (context) => PopularView(
+                              popularMovies: popularMovies,
+                              mostRecentMovies: mostRecentMovies),
                         ),
                       );
                     },
