@@ -21,6 +21,7 @@ class _HomePageViewState extends State<HomePageView> {
 
   List popularMovies = [];
   List mostRecentMovies = [];
+  
 
   MovieService _service = MovieService();
 
@@ -36,9 +37,11 @@ class _HomePageViewState extends State<HomePageView> {
 
     Map popularResult = await tmdbWithCustomLogs.v3.movies.getPouplar();
     Map mostrecentResult = await tmdbWithCustomLogs.v3.movies.getNowPlaying();
+    //Map fragmentsResult = await tmdbWithCustomLogs.v3.movies.getVideos(movieId);
     setState(() {
       popularMovies = popularResult['results'];
       mostRecentMovies = mostrecentResult['results'];
+      //fragments = fragmentsResult['results'];
     });
   }
 

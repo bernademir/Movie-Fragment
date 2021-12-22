@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
+import 'package:tmdb_api/tmdb_api.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../core/service/movieService.dart';
 
 class MovieDetailView extends StatefulWidget {
   List popularMovies;
@@ -23,10 +27,33 @@ class _MovieDetailViewState extends State<MovieDetailView> {
   List mostRecentMovies;
   int index;
 
+  List getFragments = [];
+
+  MovieService _service = MovieService();
+
+  @override
+  void initState() {
+    loadMovieFragments();
+    super.initState();
+  }
+
+  loadMovieFragments() async {
+    TMDB tmdbWithCustomLogs =
+        TMDB(ApiKeys(_service.apiKey, _service.readAccesstoken));
+
+    Map fragmentsResult = await tmdbWithCustomLogs.v3.movies
+        .getVideos(widget.popularMovies[widget.index]['id']);
+    setState(() {
+      getFragments = fragmentsResult['results'];
+    });
+  }
+
   _MovieDetailViewState(this.popularMovies, this.mostRecentMovies, this.index);
 
   Widget build(BuildContext context) {
     var rate = 3; //tiklanmaya gore verilecek
+    Color color1 = Color(0xff112d60);
+    Color color2 = Color(0xffB6C0C5);
     var _width = MediaQuery.of(context).size.width;
     return ContainerGradient.bgGradient(
       Scaffold(
@@ -79,12 +106,49 @@ class _MovieDetailViewState extends State<MovieDetailView> {
               _movieTitle(context),
               _movieOverview(context),
               _divider(context, 25.0),
-              _fragmentTitle(context, "Fragmanlar")
+              //_fragmentTitle(context, "Fragmanlar"),
+              Container(
+                  width: MediaQuery.of(context).size.width - 40,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: color1,
+                    ),
+                    child: Text(
+                      "Fragmana Git",
+                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    onPressed: () {
+                      _launchURL();
+                    },
+                  )),
             ],
           ),
         ),
       ),
     );
+  }
+
+  _fragmentTitle(BuildContext context, var text) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  void _launchURL() async {
+    String _url = "https://www.youtube.com/watch?v=" + getFragments[0]['key'];
+
+    if (!await launch(_url)) throw 'Could not launch $_url';
   }
 
   _movieOverview(BuildContext context) {
@@ -253,20 +317,6 @@ class _MovieDetailViewState extends State<MovieDetailView> {
       thickness: 2,
       indent: 11,
       endIndent: 11,
-    );
-  }
-
-  _fragmentTitle(BuildContext context, var text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.subtitle1!.copyWith(
-              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 }
