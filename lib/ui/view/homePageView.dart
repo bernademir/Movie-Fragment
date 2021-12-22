@@ -6,6 +6,7 @@ import 'package:tmdb_api/tmdb_api.dart';
 import '../../core/service/movieService.dart';
 import '../widget/ContainerGradient.dart';
 import '../widget/floatAppBar.dart';
+import 'movieDetailView.dart';
 import 'profileView.dart';
 
 class HomePageView extends StatefulWidget {
@@ -30,8 +31,9 @@ class _HomePageViewState extends State<HomePageView> {
   }
 
   loadMovies() async {
-    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(_service.apiKey, _service.readAccesstoken));
-    // api'dan gelen popüler ve en yeniler bu listelerde
+    TMDB tmdbWithCustomLogs =
+        TMDB(ApiKeys(_service.apiKey, _service.readAccesstoken));
+
     Map popularResult = await tmdbWithCustomLogs.v3.movies.getPouplar();
     Map mostrecentResult = await tmdbWithCustomLogs.v3.movies.getNowPlaying();
     setState(() {
@@ -71,11 +73,18 @@ class _HomePageViewState extends State<HomePageView> {
                   children: [
                     for (var i = 0; i < mostRecentMovies.length; i++)
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MovieDetailView(),
+                            ),
+                          );
+                        },
                         child: Container(
                           margin:
                               EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0),
-                          height: MediaQuery.of(context).size.height / 3.5,
+                          height: MediaQuery.of(context).size.height / 3.2,
                           width: MediaQuery.of(context).size.width / 3,
                           decoration: BoxDecoration(
                             color: color1.withOpacity(0.7),
@@ -84,8 +93,10 @@ class _HomePageViewState extends State<HomePageView> {
                           child: Column(
                             children: [
                               Expanded(
-                                flex: 8,
+                                flex: 10,
                                 child: Card(
+                                  semanticContainer: true,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
                                   elevation: 10.0,
                                   margin: EdgeInsets.all(0.0),
                                   shape: RoundedRectangleBorder(
@@ -101,14 +112,16 @@ class _HomePageViewState extends State<HomePageView> {
                               ),
                               Expanded(
                                 flex: 2,
-                                child: Center(
-                                  child: Text(
-                                    mostRecentMovies[i][
-                                        'original_title'], //apiden donen text listden alinacak
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1!
-                                        .copyWith(color: Colors.white),
+                                child: Container(
+                                  margin: EdgeInsets.all(5.0),
+                                  child: Center(
+                                    child: Text(
+                                      mostRecentMovies[i]['original_title'],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1!
+                                          .copyWith(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -125,11 +138,18 @@ class _HomePageViewState extends State<HomePageView> {
                 children: [
                   for (var i = 0; i < popularMovies.length; i++)
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailView(),
+                          ),
+                        );
+                      },
                       child: Container(
                         margin: EdgeInsets.only(
                             left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                        height: MediaQuery.of(context).size.height / 3.5,
+                        height: MediaQuery.of(context).size.height / 3.2,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           color: color1.withOpacity(0.7),
@@ -138,7 +158,10 @@ class _HomePageViewState extends State<HomePageView> {
                         child: Row(
                           children: [
                             Expanded(
+                              flex: 3,
                               child: Card(
+                                semanticContainer: true,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
                                 elevation: 10.0,
                                 margin: EdgeInsets.all(0.0),
                                 shape: RoundedRectangleBorder(
@@ -152,9 +175,10 @@ class _HomePageViewState extends State<HomePageView> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 20.0),
                             Expanded(
+                              flex: 4,
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   _movieNameText(i, context),
                                   _yearText(i, context),
@@ -253,14 +277,15 @@ class _HomePageViewState extends State<HomePageView> {
                 TextSpan(
                   text: homePageTitles[2].toUpperCase(),
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withOpacity(0.7),
                       decoration: TextDecoration.underline),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PopularView(),
+                          builder: (context) =>
+                              PopularView(popularMovies: popularMovies),
                         ),
                       );
                     },
