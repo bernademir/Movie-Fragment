@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-
-import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/service/movieService.dart';
+import '../widget/ContainerGradient.dart';
 
 class MovieDetailView extends StatefulWidget {
   List resultList;
   int index;
-  MovieDetailView({
-    Key? key,
-    required this.resultList,
-    required this.index
-  }) : super(key: key);
+  MovieDetailView({Key? key, required this.resultList, required this.index})
+      : super(key: key);
 
   @override
   _MovieDetailViewState createState() =>
@@ -48,9 +44,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
   _MovieDetailViewState(this.resultList, this.index);
 
   Widget build(BuildContext context) {
-    var rate = 3; //tiklanmaya gore verilecek
     Color color1 = Color(0xff112d60);
-    Color color2 = Color(0xffB6C0C5);
     var _width = MediaQuery.of(context).size.width;
     return ContainerGradient.bgGradient(
       Scaffold(
@@ -67,28 +61,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: <Widget>[
-              Stack(
-                children: [
-                  _movieImage(context),
-                  Positioned(
-                    top: MediaQuery.of(context).size.height / 2 - 50,
-                    child: Container(
-                      width: _width,
-                      height: 50,
-                      color: Colors.black.withOpacity(0.5),
-                      child: Row(
-                        children: [
-                          for (var i = 0; i < 5; i++)
-                            if (rate > i)
-                              _star(context, true, 30.0 + (i * 45))
-                            else
-                              _star(context, false, 30.0 + (i * 45)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _movieImage(context),
               Row(
                 children: [
                   _popularityText(_width, context),
@@ -103,24 +76,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
               _movieTitle(context),
               _movieOverview(context),
               _divider(context, 25.0),
-              //_fragmentTitle(context, "Fragmanlar"),
-              Container(
-                  width: MediaQuery.of(context).size.width - 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: color1,
-                    ),
-                    child: Text(
-                      "Fragmana Git",
-                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    onPressed: () {
-                      _launchURL();
-                    },
-                  )),
+              _fragmentButton(context, color1),
             ],
           ),
         ),
@@ -128,18 +84,24 @@ class _MovieDetailViewState extends State<MovieDetailView> {
     );
   }
 
-  _fragmentTitle(BuildContext context, var text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.subtitle1!.copyWith(
-              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
+  _fragmentButton(BuildContext context, Color color1) {
+    return Container(
+        width: MediaQuery.of(context).size.width - 40,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: color1,
+          ),
+          child: Text(
+            "Fragmana Git",
+            style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.normal),
+          ),
+          onPressed: () {
+            _launchURL();
+          },
+        ));
   }
 
   void _launchURL() async {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 import '../view/movieDetailView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,18 +7,12 @@ class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
   List popularMovies;
   List lastList = [];
   FloatAppBar(
-    {
-      Key? key,
-      required this.mostRecentMovies,
-      required this.popularMovies
-    }
-  ) : super(key: key);
-  
-
+      {Key? key, required this.mostRecentMovies, required this.popularMovies})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String searchText = "Ara";
+    String searchText = "Arama yapmak için tıklayınız";
     return Stack(
       children: <Widget>[
         Positioned(
@@ -36,29 +29,15 @@ class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
                 },
               ),
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 5,
-                        blurRadius: 5,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    cursorColor: Colors.white,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.go,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      hintText: searchText,
-                      hintStyle: TextStyle(color: Colors.white),
-                    ),
+                child: TextField(
+                  cursorColor: Colors.white,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.go,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                    hintText: searchText,
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -66,7 +45,12 @@ class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
                 color: Colors.white,
                 icon: Icon(Icons.search),
                 onPressed: () {
-                  showSearch(context: context, delegate: Search(mostRecentMovies: mostRecentMovies, popularMovies: popularMovies));
+                  showSearch(
+                    context: context,
+                    delegate: Search(
+                        mostRecentMovies: mostRecentMovies,
+                        popularMovies: popularMovies),
+                  );
                 },
               ),
             ],
@@ -80,80 +64,75 @@ class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
-class Search extends SearchDelegate{
+class Search extends SearchDelegate {
   List mostRecentMovies;
   List popularMovies;
   Search(
-    {
-      Key? key,
-      required this.mostRecentMovies,
-      required this.popularMovies
-    }
-  );
+      {Key? key, required this.mostRecentMovies, required this.popularMovies});
 
-  dynamic readySharedPreferences(int index) async{
-        Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-        final SharedPreferences prefs = await _prefs;
-        prefs.clear();
-        prefs.setInt("id", index);
+  dynamic readySharedPreferences(int index) async {
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    prefs.clear();
+    prefs.setInt("id", index);
 
-        print(prefs.getInt('id'));
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    // print(prefs.getInt('id'));
+    // print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-        /*Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    /*Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
         final SharedPreferences prefs = await _prefs;*/
-        
   }
-
 
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        onPressed: (){query: '';}, 
-        icon: const Icon(Icons.clear)
-      )
+          onPressed: () {
+            query:
+            '';
+          },
+          icon: const Icon(Icons.clear))
     ];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-        onPressed: (){
+        onPressed: () {
           close(context, null);
-        }, 
-        icon: const Icon(Icons.arrow_back)
-      );
+        },
+        icon: const Icon(Icons.arrow_back));
   }
 
   @override
   Widget buildResults(BuildContext context) {
     List matchQuery = [];
     List liste = [];
-    for(var i=0; i<popularMovies.length; i++){
-      if(popularMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
+    for (var i = 0; i < popularMovies.length; i++) {
+      if (popularMovies[i]['original_title']
+          .toLowerCase()
+          .contains(query.toLowerCase())) {
         matchQuery.add(popularMovies[i]['original_title']);
         liste.add(popularMovies[i]);
       }
     }
     return ListView.builder(
       itemCount: matchQuery.length,
-      itemBuilder: (context, index){
+      itemBuilder: (context, index) {
         var result = matchQuery[index];
         return ListTile(
-          title: Text(result),
-          onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MovieDetailView(
-                              resultList: liste,
-                              index: index,
-                            ),
-                          ),
-                        );
-                      }
-        );
+            title: Text(result),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDetailView(
+                    resultList: liste,
+                    index: index,
+                  ),
+                ),
+              );
+            });
       },
     );
   }
@@ -162,34 +141,34 @@ class Search extends SearchDelegate{
   Widget buildSuggestions(BuildContext context) {
     List matchQuery = [];
     List liste = [];
-    for(var i=0; i<popularMovies.length; i++){
-      if(popularMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
+    for (var i = 0; i < popularMovies.length; i++) {
+      if (popularMovies[i]['original_title']
+          .toLowerCase()
+          .contains(query.toLowerCase())) {
         matchQuery.add(popularMovies[i]['original_title']);
         liste.add(popularMovies[i]);
       }
     }
     return ListView.builder(
       itemCount: matchQuery.length,
-      itemBuilder: (context, index){
+      itemBuilder: (context, index) {
         var result = matchQuery[index];
 
         return ListTile(
-          title: Text(result),
-          onTap: () {
-            readySharedPreferences(liste[index]['id']);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MovieDetailView(
-                  resultList: liste,
-                  index: index,
+            title: Text(result),
+            onTap: () {
+              readySharedPreferences(liste[index]['id']);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDetailView(
+                    resultList: liste,
+                    index: index,
+                  ),
                 ),
-              ),
-            );
-          }
-        );
+              );
+            });
       },
     );
   }
-
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_fragment/ui/view/popularView.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../core/service/movieService.dart';
 import '../widget/ContainerGradient.dart';
 import '../widget/floatAppBar.dart';
 import 'movieDetailView.dart';
+import 'popularView.dart';
 import 'profileView.dart';
 
 class HomePageView extends StatefulWidget {
@@ -21,7 +21,6 @@ class _HomePageViewState extends State<HomePageView> {
 
   List popularMovies = [];
   List mostRecentMovies = [];
-  
 
   MovieService _service = MovieService();
 
@@ -37,11 +36,9 @@ class _HomePageViewState extends State<HomePageView> {
 
     Map popularResult = await tmdbWithCustomLogs.v3.movies.getPouplar();
     Map mostrecentResult = await tmdbWithCustomLogs.v3.movies.getNowPlaying();
-    //Map fragmentsResult = await tmdbWithCustomLogs.v3.movies.getVideos(movieId);
     setState(() {
       popularMovies = popularResult['results'];
       mostRecentMovies = mostrecentResult['results'];
-      //fragments = fragmentsResult['results'];
     });
   }
 
@@ -52,12 +49,15 @@ class _HomePageViewState extends State<HomePageView> {
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: FloatAppBar(popularMovies: popularMovies, mostRecentMovies: mostRecentMovies,),
+        appBar: FloatAppBar(
+          popularMovies: popularMovies,
+          mostRecentMovies: mostRecentMovies,
+        ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: color1,
           child: Icon(
             Icons.account_circle,
-            color: color2,
+            color: Colors.white,
           ),
           onPressed: () {
             Navigator.of(context).pushReplacement(
@@ -78,61 +78,14 @@ class _HomePageViewState extends State<HomePageView> {
                       InkWell(
                         onTap: () {
                           Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => MovieDetailView(
-                                   resultList: mostRecentMovies,
-                                   index: i),
-                             ),
-                           );
-                         },
-                        child: Container(
-                          margin:
-                              EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0),
-                          height: MediaQuery.of(context).size.height / 3.2,
-                          width: MediaQuery.of(context).size.width / 3,
-                          decoration: BoxDecoration(
-                            color: color1.withOpacity(0.7),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                flex: 10,
-                                child: Card(
-                                  semanticContainer: true,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  elevation: 10.0,
-                                  margin: EdgeInsets.all(0.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: Image.network(
-                                    'https://image.tmdb.org/t/p/original/' +
-                                        mostRecentMovies[i]['poster_path']
-                                            .toString(),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  margin: EdgeInsets.all(5.0),
-                                  child: Center(
-                                    child: Text(
-                                      mostRecentMovies[i]['original_title'],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1!
-                                          .copyWith(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MovieDetailView(
+                                  resultList: mostRecentMovies, index: i),
+                            ),
+                          );
+                        },
+                        child: _mostRecentMovies(context, color1, i),
                       ),
                   ],
                 ),
@@ -167,21 +120,7 @@ class _HomePageViewState extends State<HomePageView> {
                           children: [
                             Expanded(
                               flex: 3,
-                              child: Card(
-                                semanticContainer: true,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                elevation: 10.0,
-                                margin: EdgeInsets.all(0.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: Image.network(
-                                  'https://image.tmdb.org/t/p/original' +
-                                      popularMovies[i]['poster_path']
-                                          .toString(),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
+                              child: _popularMoviesImage(i),
                             ),
                             Expanded(
                               flex: 4,
@@ -212,6 +151,71 @@ class _HomePageViewState extends State<HomePageView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  _popularMoviesImage(int i) {
+    return Card(
+      semanticContainer: true,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 10.0,
+      margin: EdgeInsets.all(0.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Image.network(
+        'https://image.tmdb.org/t/p/original' +
+            popularMovies[i]['poster_path'].toString(),
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
+  _mostRecentMovies(BuildContext context, Color color1, int i) {
+    return Container(
+      margin: EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0),
+      height: MediaQuery.of(context).size.height / 3,
+      width: MediaQuery.of(context).size.width / 3.5,
+      decoration: BoxDecoration(
+        color: color1.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 10,
+            child: Card(
+              semanticContainer: true,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              elevation: 10.0,
+              margin: EdgeInsets.all(0.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Image.network(
+                'https://image.tmdb.org/t/p/original/' +
+                    mostRecentMovies[i]['poster_path'].toString(),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Container(
+              margin: EdgeInsets.all(5.0),
+              child: Center(
+                child: Text(
+                  mostRecentMovies[i]['original_title'],
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

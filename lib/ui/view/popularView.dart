@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:movie_fragment/ui/view/movieDetailView.dart';
-import 'package:movie_fragment/ui/widget/ContainerGradient.dart';
-import 'package:movie_fragment/ui/widget/floatAppBar.dart';
+import '../widget/ContainerGradient.dart';
+import '../widget/floatAppBar.dart';
+import 'movieDetailView.dart';
 
 class PopularView extends StatefulWidget {
   List popularMovies;
@@ -30,25 +30,14 @@ class _PopularViewState extends State<PopularView> {
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: FloatAppBar(popularMovies: popularMovies, mostRecentMovies: mostRecentMovies),
+        appBar: FloatAppBar(
+            popularMovies: popularMovies, mostRecentMovies: mostRecentMovies),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
             children: <Widget>[
               SizedBox(height: 50.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  margin: EdgeInsets.all(10.0),
-                  child: Text(
-                    "Popüler",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5!
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-              ),
+              _headline(context),
               for (int i = 0; i < widget.popularMovies.length; i++)
                 InkWell(
                   onTap: () {
@@ -76,63 +65,14 @@ class _PopularViewState extends State<PopularView> {
                         children: [
                           Expanded(
                             flex: 2,
-                            child: Container(
-                              margin: EdgeInsets.all(0.0),
-                              width: 97,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: new DecorationImage(
-                                  image: new NetworkImage(
-                                    'https://image.tmdb.org/t/p/original' +
-                                        widget.popularMovies[i]['poster_path']
-                                            .toString(),
-                                  ),
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ),
-                            ),
+                            child: _movieImage(i),
                           ),
                           Expanded(
                             flex: 3,
                             child: Column(
                               children: <Widget>[
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 10, top: 15),
-                                    child: Text(
-                                      widget.popularMovies[i]['original_title'],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 10, top: 55),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          widget.popularMovies[i]
-                                                      ['vote_average']
-                                                  .toString() +
-                                              "/10",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle1!
-                                              .copyWith(color: Colors.white),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                _movieTitle(i, context),
+                                _movieVote(i, context),
                               ],
                             ),
                           ),
@@ -143,6 +83,79 @@ class _PopularViewState extends State<PopularView> {
                 ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  _movieVote(int i, BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(left: 10, top: 55),
+        child: Row(
+          children: [
+            Icon(
+              Icons.star,
+              color: Colors.yellow,
+            ),
+            Text(
+              widget.popularMovies[i]['vote_average'].toString() + "/10",
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1!
+                  .copyWith(color: Colors.white),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  _movieTitle(int i, BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(left: 10, top: 15),
+        child: Text(
+          widget.popularMovies[i]['original_title'],
+          style: Theme.of(context)
+              .textTheme
+              .headline6!
+              .copyWith(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  _movieImage(int i) {
+    return Container(
+      margin: EdgeInsets.all(0.0),
+      width: 97,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        image: new DecorationImage(
+          image: new NetworkImage(
+            'https://image.tmdb.org/t/p/original' +
+                widget.popularMovies[i]['poster_path'].toString(),
+          ),
+          fit: BoxFit.fitWidth,
+        ),
+      ),
+    );
+  }
+
+  _headline(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.all(10.0),
+        child: Text(
+          "Popüler",
+          style: Theme.of(context)
+              .textTheme
+              .headline5!
+              .copyWith(color: Colors.white),
         ),
       ),
     );

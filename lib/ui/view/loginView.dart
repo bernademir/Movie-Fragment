@@ -32,7 +32,7 @@ class LoginViewState extends State<LoginView> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              _uygulamaAdi(context),
+              _uygulamaAdi(context, "FilmKolik"),
               Form(
                 key: _formKey,
                 child: Column(
@@ -178,7 +178,7 @@ class LoginViewState extends State<LoginView> {
     );
   }
 
-  _uygulamaAdi(BuildContext context) {
+  _uygulamaAdi(BuildContext context, String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 60.0),
       child: Center(
@@ -187,7 +187,7 @@ class LoginViewState extends State<LoginView> {
           height: MediaQuery.of(context).size.height / 3,
           child: Center(
             child: Text(
-              "Uygulama Adı",
+              text,
               style: Theme.of(context)
                   .textTheme
                   .headline4!

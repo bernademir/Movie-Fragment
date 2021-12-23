@@ -193,7 +193,7 @@ class _RegisterViewState extends State<RegisterView> {
           height: MediaQuery.of(context).size.height / 3,
           child: Center(
             child: Text(
-              "Uygulama Adı",
+              "FilmKolik",
               style: Theme.of(context)
                   .textTheme
                   .headline4!
