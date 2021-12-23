@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import '../view/movieDetailView.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
   List mostRecentMovies;
@@ -90,6 +91,21 @@ class Search extends SearchDelegate{
     }
   );
 
+  dynamic readySharedPreferences(int index) async{
+        Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+        final SharedPreferences prefs = await _prefs;
+        prefs.clear();
+        prefs.setInt("id", index);
+
+        print(prefs.getInt('id'));
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+        /*Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+        final SharedPreferences prefs = await _prefs;*/
+        
+  }
+
+
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -123,7 +139,6 @@ class Search extends SearchDelegate{
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index){
-        print(matchQuery);
         var result = matchQuery[index];
         return ListTile(
           title: Text(result),
@@ -156,21 +171,22 @@ class Search extends SearchDelegate{
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index){
-        print(matchQuery);
         var result = matchQuery[index];
+
         return ListTile(
           title: Text(result),
           onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MovieDetailView(
-                              resultList: liste,
-                              index: index,
-                            ),
-                          ),
-                        );
-                      }
+            readySharedPreferences(liste[index]['id']);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MovieDetailView(
+                  resultList: liste,
+                  index: index,
+                ),
+              ),
+            );
+          }
         );
       },
     );

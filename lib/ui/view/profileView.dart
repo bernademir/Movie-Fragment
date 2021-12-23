@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_fragment/core/service/movieService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../core/model/userModel.dart';
 import '../widget/ContainerGradient.dart';
@@ -17,17 +20,43 @@ class _ProfileViewState extends State<ProfileView> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  
+  List recommendedMovies = [];
+  
+
+  MovieService _service = MovieService();
+
+
+  loadMovies() async {
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    int res = prefs.getInt("id")!;
+    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(_service.apiKey, _service.readAccesstoken));
+
+    Map recommendedResult = await tmdbWithCustomLogs.v3.movies.getRecommended(res);
+    setState(() {
+      recommendedMovies = recommendedResult['results'];
+      //fragments = fragmentsResult['results'];
+    });
+    print(recommendedMovies);
+    print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+  }
+  
+  
+  
   @override
   void initState() {
+    loadMovies();
     super.initState();
-    FirebaseFirestore.instance
+    /*FirebaseFirestore.instance
         .collection("users")
         .doc(user?.uid)
         .get()
         .then((value) {
       this.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
-    });
+    });*/
+    
   }
 
   @override
@@ -37,39 +66,7 @@ class _ProfileViewState extends State<ProfileView> {
     final double itemHeight = MediaQuery.of(context).size.height / 4;
     final double itemWidth = MediaQuery.of(context).size.width / 3;
 
-    final favList = [
-      //api den bu bilgiler cekilecek
-      [
-        "https://tr.web.img4.acsta.net/pictures/21/10/13/11/52/2707524.jpg",
-        "movie name1",
-        "8.0"
-      ],
-      [
-        "https://tr.web.img4.acsta.net/pictures/21/10/13/11/52/2707524.jpg",
-        "movie name2",
-        "8.0"
-      ],
-      [
-        "https://tr.web.img4.acsta.net/pictures/21/10/13/11/52/2707524.jpg",
-        "movie name3",
-        "8.0"
-      ],
-      [
-        "https://tr.web.img4.acsta.net/pictures/21/10/13/11/52/2707524.jpg",
-        "movie name4",
-        "8.0"
-      ],
-      [
-        "https://tr.web.img4.acsta.net/pictures/21/10/13/11/52/2707524.jpg",
-        "movie name5",
-        "8.0"
-      ],
-      [
-        "https://tr.web.img4.acsta.net/pictures/21/10/13/11/52/2707524.jpg",
-        "movie name6",
-        "8.0"
-      ],
-    ];
+    
 
     return ContainerGradient.bgGradient(
       Scaffold(
@@ -87,7 +84,7 @@ class _ProfileViewState extends State<ProfileView> {
         body: Column(
           children: [
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Container(
                 margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 100.0),
                 decoration: BoxDecoration(
@@ -124,82 +121,87 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
               ),
             ),
+            for (int i = 0; i < recommendedMovies.length; i++)
             Expanded(
               flex: 5,
               child: Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  childAspectRatio: itemWidth / itemHeight,
-                  padding: const EdgeInsets.all(4.0),
-                  mainAxisSpacing: 40.0,
-                  crossAxisSpacing: 30.0,
-                  children: [
-                    ...favList.map(
-                      (i) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: InkWell(
-                              onTap: () {},
-                              child: Container(
-                                width: itemWidth,
-                                height: itemHeight,
-                                child: Image.network(
-                                  i.first,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: SizedBox(
-                              width: 100.0,
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Text(
-                                  i.elementAt(1),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1!
-                                      .copyWith(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: SizedBox(
-                              width: 50.0,
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      color: Colors.yellow,
-                                      size: 15.0,
-                                    ),
-                                    Text(
-                                      i.last,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .caption!
-                                          .copyWith(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                  margin: EdgeInsets.all(8.0),
+                  height: MediaQuery.of(context).size.height / 4,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: color1.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                  ],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            margin: EdgeInsets.all(0.0),
+                            width: 97,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: new DecorationImage(
+                                image: new NetworkImage(
+                                  'https://image.tmdb.org/t/p/original' +
+                                      recommendedMovies[i]['poster_path']
+                                          .toString(),
+                                ),
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10, top: 15),
+                                  child: Text(
+                                    recommendedMovies[i]['original_title'],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10, top: 55),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.yellow,
+                                      ),
+                                      Text(
+                                        recommendedMovies[i]
+                                                    ['vote_average']
+                                                .toString() +
+                                            "/10",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1!
+                                            .copyWith(color: Colors.white),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
             ),
           ],
         ),
