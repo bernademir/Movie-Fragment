@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:tmdb_api/tmdb_api.dart';
+import '../view/movieDetailView.dart';
 
 class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
-  const FloatAppBar({Key? key}) : super(key: key);
+  List mostRecentMovies;
+  List popularMovies;
+  FloatAppBar(
+    {
+      Key? key,
+      required this.mostRecentMovies,
+      required this.popularMovies
+    }
+  ) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +62,7 @@ class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
                 color: Colors.white,
                 icon: Icon(Icons.search),
                 onPressed: () {
-                  Scaffold.of(context).openDrawer();
+                  showSearch(context: context, delegate: Search(mostRecentMovies: mostRecentMovies, popularMovies: popularMovies));
                 },
               ),
             ],
@@ -64,4 +74,99 @@ class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class Search extends SearchDelegate{
+  List mostRecentMovies;
+  List popularMovies;
+  Search(
+    {
+      Key? key,
+      required this.mostRecentMovies,
+      required this.popularMovies
+    }
+  );
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: (){query: '';}, 
+        icon: const Icon(Icons.clear)
+      )
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: (){
+          close(context, null);
+        }, 
+        icon: const Icon(Icons.arrow_back)
+      );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+    for(var i=0; i<mostRecentMovies.length; i++){
+      if(mostRecentMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
+        matchQuery.add(mostRecentMovies[i]['original_title']);
+      }
+    }
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index){
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+          onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailView(
+                              popularMovies: popularMovies,
+                              mostRecentMovies: mostRecentMovies,
+                              index: index,
+                            ),
+                          ),
+                        );
+                      }
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+    for(var i=0; i<mostRecentMovies.length; i++){
+      if(mostRecentMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
+        matchQuery.add(mostRecentMovies[i]['original_title']);
+      }
+    }
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index){
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+          onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailView(
+                              popularMovies: popularMovies,
+                              mostRecentMovies: mostRecentMovies,
+                              index: index,
+                            ),
+                          ),
+                        );
+                      }
+        );
+      },
+    );
+  }
+
 }

@@ -52,7 +52,7 @@ class _HomePageViewState extends State<HomePageView> {
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: FloatAppBar(),
+        appBar: FloatAppBar(popularMovies: popularMovies, mostRecentMovies: mostRecentMovies,),
         floatingActionButton: FloatingActionButton(
           backgroundColor: color1,
           child: Icon(

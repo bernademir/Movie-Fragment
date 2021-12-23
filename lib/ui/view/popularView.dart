@@ -30,7 +30,7 @@ class _PopularViewState extends State<PopularView> {
     return ContainerGradient.bgGradient(
       Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: FloatAppBar(),
+        appBar: FloatAppBar(popularMovies: popularMovies, mostRecentMovies: mostRecentMovies),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
