@@ -5,6 +5,7 @@ import '../view/movieDetailView.dart';
 class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
   List mostRecentMovies;
   List popularMovies;
+  List lastList = [];
   FloatAppBar(
     {
       Key? key,
@@ -12,6 +13,8 @@ class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
       required this.popularMovies
     }
   ) : super(key: key);
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,15 +112,18 @@ class Search extends SearchDelegate{
 
   @override
   Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
-    for(var i=0; i<mostRecentMovies.length; i++){
-      if(mostRecentMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
-        matchQuery.add(mostRecentMovies[i]['original_title']);
+    List matchQuery = [];
+    List liste = [];
+    for(var i=0; i<popularMovies.length; i++){
+      if(popularMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
+        matchQuery.add(popularMovies[i]['original_title']);
+        liste.add(popularMovies[i]);
       }
     }
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index){
+        print(matchQuery);
         var result = matchQuery[index];
         return ListTile(
           title: Text(result),
@@ -126,8 +132,7 @@ class Search extends SearchDelegate{
                           context,
                           MaterialPageRoute(
                             builder: (context) => MovieDetailView(
-                              popularMovies: popularMovies,
-                              mostRecentMovies: mostRecentMovies,
+                              resultList: liste,
                               index: index,
                             ),
                           ),
@@ -140,15 +145,18 @@ class Search extends SearchDelegate{
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    for(var i=0; i<mostRecentMovies.length; i++){
-      if(mostRecentMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
-        matchQuery.add(mostRecentMovies[i]['original_title']);
+    List matchQuery = [];
+    List liste = [];
+    for(var i=0; i<popularMovies.length; i++){
+      if(popularMovies[i]['original_title'].toLowerCase().contains(query.toLowerCase())){
+        matchQuery.add(popularMovies[i]['original_title']);
+        liste.add(popularMovies[i]);
       }
     }
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index){
+        print(matchQuery);
         var result = matchQuery[index];
         return ListTile(
           title: Text(result),
@@ -157,8 +165,7 @@ class Search extends SearchDelegate{
                           context,
                           MaterialPageRoute(
                             builder: (context) => MovieDetailView(
-                              popularMovies: popularMovies,
-                              mostRecentMovies: mostRecentMovies,
+                              resultList: liste,
                               index: index,
                             ),
                           ),

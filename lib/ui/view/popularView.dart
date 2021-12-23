@@ -56,8 +56,7 @@ class _PopularViewState extends State<PopularView> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => MovieDetailView(
-                          popularMovies: widget.popularMovies,
-                          mostRecentMovies: widget.mostRecentMovies,
+                          resultList: widget.popularMovies,
                           index: i,
                         ),
                       ),

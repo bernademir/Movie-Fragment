@@ -7,24 +7,21 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/service/movieService.dart';
 
 class MovieDetailView extends StatefulWidget {
-  List popularMovies;
-  List mostRecentMovies;
+  List resultList;
   int index;
   MovieDetailView({
     Key? key,
-    required this.popularMovies,
-    required this.mostRecentMovies,
-    required this.index,
+    required this.resultList,
+    required this.index
   }) : super(key: key);
 
   @override
   _MovieDetailViewState createState() =>
-      _MovieDetailViewState(popularMovies, mostRecentMovies, index);
+      _MovieDetailViewState(resultList, index);
 }
 
 class _MovieDetailViewState extends State<MovieDetailView> {
-  List popularMovies;
-  List mostRecentMovies;
+  List resultList;
   int index;
 
   List getFragments = [];
@@ -42,13 +39,13 @@ class _MovieDetailViewState extends State<MovieDetailView> {
         TMDB(ApiKeys(_service.apiKey, _service.readAccesstoken));
 
     Map fragmentsResult = await tmdbWithCustomLogs.v3.movies
-        .getVideos(widget.popularMovies[widget.index]['id']);
+        .getVideos(widget.resultList[widget.index]['id']);
     setState(() {
       getFragments = fragmentsResult['results'];
     });
   }
 
-  _MovieDetailViewState(this.popularMovies, this.mostRecentMovies, this.index);
+  _MovieDetailViewState(this.resultList, this.index);
 
   Widget build(BuildContext context) {
     var rate = 3; //tiklanmaya gore verilecek
@@ -157,7 +154,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
       child: Container(
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
         child: Text(
-          widget.popularMovies[widget.index]['overview'],
+          widget.resultList[widget.index]['overview'],
           style: Theme.of(context)
               .textTheme
               .subtitle1!
@@ -173,7 +170,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
       child: Container(
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 0.0),
         child: Text(
-          widget.popularMovies[widget.index]['original_title'],
+          widget.resultList[widget.index]['original_title'],
           style: Theme.of(context).textTheme.subtitle1!.copyWith(
               color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         ),
@@ -190,7 +187,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
           width: _width / 3,
           margin: const EdgeInsets.only(top: 20.0),
           child: Text(
-            widget.popularMovies[widget.index]['vote_count'].toString(),
+            widget.resultList[widget.index]['vote_count'].toString(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.subtitle1!.copyWith(
                 color: Colors.blue[900],
@@ -228,7 +225,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
           child: Row(
             children: [
               Text(
-                widget.popularMovies[widget.index]['vote_average'].toString(),
+                widget.resultList[widget.index]['vote_average'].toString(),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                     color: Colors.white,
@@ -260,7 +257,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
           width: _width / 3,
           margin: const EdgeInsets.only(top: 20.0),
           child: Text(
-            widget.popularMovies[widget.index]['popularity'].toString(),
+            widget.resultList[widget.index]['popularity'].toString(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.subtitle1!.copyWith(
                 color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
@@ -288,7 +285,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
         image: DecorationImage(
             image: NetworkImage(
               'https://image.tmdb.org/t/p/original' +
-                  widget.popularMovies[widget.index]['poster_path'].toString(),
+                  widget.resultList[widget.index]['poster_path'].toString(),
             ),
             fit: BoxFit.fitWidth),
       ),
